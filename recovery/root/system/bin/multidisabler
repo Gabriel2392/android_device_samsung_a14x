@@ -35,14 +35,16 @@ resize_vendor() {
     e2fsck -E unshare_blocks $dm_block_ext4
   elif [ "$dm_block_f2fs" ]; then
     vendor_size_mb=$(du -sm /vendor | cut -f1)
+    new_vendor_size_mb=`echo $vendor_size_mb \* 1.7 |bc`
+    new_vendor_size_mb=${new_vendor_size_mb%.*}
     uuid=$(toybox blkid $dm_block_f2fs | egrep '[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}' -o)
     echo " - Create R/W vendor image..."
-    truncate -s $((vendor_size_mb*2))M /tmp/vendor-rw.img
+    truncate -s ${new_vendor_size_mb}M /tmp/vendor-rw.img
     make_f2fs -g android -O project_quota,extra_attr,inode_checksum,sb_checksum,compression,flexible_inline_xattr,verity,inode_crtime -U $uuid -f -l vendor /tmp/vendor-rw.img
     mkdir -p /tmp/vendor-rw
     mount /tmp/vendor-rw.img /tmp/vendor-rw
     echo " - Copy old R/O vendor file to our new created..."
-    cp -rp /vendor/* /tmp/vendor-rw
+    cp -a --preserve=all /vendor/* /tmp/vendor-rw
     umount /vendor
     umount /tmp/vendor-rw
     echo " - Checking vendor image before flashing..."
@@ -151,7 +153,7 @@ disable_recovery_restoration() {
 }
 
 echo " "
-echo "Multi-disabler v3.1 for Samsung devices"
+echo "Multi-disabler for Samsung devices"
 echo "running Android 9 or later."
 echo "by Ian Macdonald, enhanced by afaneh92"
 echo " "

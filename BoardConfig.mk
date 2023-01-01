@@ -14,6 +14,8 @@
 # limitations under the License.
 #
 
+LOCAL_PATH := device/samsung/a33x
+
 # Bootloader
 BOARD_VENDOR := samsung
 TARGET_SOC := s5e8825
@@ -53,9 +55,9 @@ TARGET_USERIMAGES_USE_F2FS := true
 TARGET_BOARD_PLATFORM := universal8825
 
 # Kernel
-TARGET_PREBUILT_KERNEL := device/samsung/a53x/prebuilt/Image
-TARGET_PREBUILT_DTB := device/samsung/a53x/prebuilt/dtb
-BOARD_PREBUILT_DTBOIMAGE := device/samsung/a53x/prebuilt/recovery_dtbo
+TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/prebuilt/Image
+TARGET_PREBUILT_DTB := $(LOCAL_PATH)/prebuilt/dtb
+BOARD_PREBUILT_DTBOIMAGE := $(LOCAL_PATH)/prebuilt/recovery_dtbo
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 BOARD_INCLUDE_RECOVERY_DTBO := true
 TARGET_KERNEL_ARCH := arm64
@@ -73,9 +75,9 @@ BOARD_KERNEL_TAGS_OFFSET := 0x00000000
 BOARD_DTB_OFFSET := 0x00000000
 BOARD_MKBOOTIMG_ARGS := --kernel_offset $(BOARD_KERNEL_OFFSET) --ramdisk_offset $(BOARD_RAMDISK_OFFSET) 
 BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET) --second_offset $(BOARD_KERNEL_SECOND_OFFSET)
-BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION) --pagesize $(BOARD_KERNEL_PAGESIZE) --board "SRPUK11B002"
+BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION) --pagesize $(BOARD_KERNEL_PAGESIZE) --board "SRPUI23A002"
 BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB) --dtb_offset $(BOARD_DTB_OFFSET)
-BOARD_CUSTOM_BOOTIMG_MK := device/samsung/a53x/bootimg.mk
+BOARD_CUSTOM_BOOTIMG_MK := $(LOCAL_PATH)/mkboot/bootimg.mk
 
 # Recovery
 BOARD_HAS_LARGE_FILESYSTEM := true
@@ -125,7 +127,7 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 DISABLE_ARTIFACT_PATH_REQUIREMENTS := true
 
 # TWRP specific build flags
-TW_DEVICE_VERSION := 1_afaneh92
+TW_DEVICE_VERSION := Samsung Galaxy A33 5G
 TW_THEME := portrait_hdpi
 RECOVERY_SDCARD_ON_DATA := true
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"

@@ -45,6 +45,8 @@ resize_vendor() {
     mount /tmp/vendor-rw.img /tmp/vendor-rw
     echo " - Copy old R/O vendor file to our new created..."
     cp -a --preserve=all /vendor/* /tmp/vendor-rw
+    echo " - Restoring SELinux contexts to our new R/W vendor..."
+    busybox chcon -h -R --reference=/vendor /tmp/vendor-rw
     umount /vendor
     umount /tmp/vendor-rw
     echo " - Checking vendor image before flashing..."

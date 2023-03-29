@@ -1,6 +1,6 @@
-ro.display.series=Samsung A33 5G
-ro.product.board=s5e8825
-ro.board.platform=universal8825
+ro.display.series=Samsung A14 5G (Exynos)
+ro.product.board=s5e8535
+ro.board.platform=universal8535
 sys.usb.controller=13200000.dwc3
 ro.boot.dynamic_partitions=true
 ro.boot.boot_devices=13500000.ufs

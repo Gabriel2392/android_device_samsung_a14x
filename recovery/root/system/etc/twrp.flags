@@ -11,6 +11,12 @@ vendor		/vendor		ext4						wait,logical,first_stage_mount
 product		/product	ext4						wait,logical,first_stage_mount
 odm		/odm		ext4						wait,logical,first_stage_mount
 
+# Logical erofs partitions
+system          /system         erofs                                            wait,logical,first_stage_mount
+vendor          /vendor         erofs                                            wait,logical,first_stage_mount
+product         /product        erofs                                            wait,logical,first_stage_mount
+odm             /odm            erofs                                            wait,logical,first_stage_mount
+
 # Symlinked partitions
 /system_image	emmc		/dev/block/bootdevice/by-name/system		flags=backup=0;flashimg;display="System Image"
 /vendor_image	emmc		/dev/block/bootdevice/by-name/vendor		flags=backup=0;flashimg;display="Vendor Image"

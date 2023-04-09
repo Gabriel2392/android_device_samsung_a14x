@@ -1,0 +1,140 @@
+#!/system/bin/sh
+#
+# A simple Samsung services disabler by Ian Macdonald.
+#
+# Use this to prime your device after installing TWRP.
+
+ram=/ramfs
+vendor_image=${ram}/vendor.img
+
+md5() {
+  md5sum -b "$1" | cut -d' ' -f1
+}
+
+disable_encryption() {
+    echo "- Disabling encryption..."
+    chksum=$(md5 "$vendor_image")
+    # Target: /vendor/etc/fstab.*
+    gnused -i -b 's|fileencryption=|notencryptable=|g' $vendor_image
+    nchksum=$(md5 "$vendor_image")
+    if [ "$chksum" != "$nchksum" ]; then
+        echo " -    Success..."
+    else
+        echo " -    Already disabled..."
+    fi
+}
+
+disable_recovery_restoration() {
+    echo "- Disabling recovery restoration..."
+    chksum=$(md5 "$vendor_image")
+    # Target: /vendor/bin/install-recovery.sh (is the script that does the restoration, so we edit it.)
+    gnused -i -b 's|/vendor/recovery-from-boot.p|/vendor/recovery-from-bsod.p|g' $vendor_image
+    nchksum=$(md5 "$vendor_image")
+    if [ "$chksum" != "$nchksum" ]; then
+        echo " -    Success..."
+    else
+        echo " -    Already disabled..."
+    fi
+}
+
+fsck() {
+    fsck.erofs $vendor_image
+    if [ "$?" != "0" ]; then
+        echo " - ERROR: Failed to run fsck!!! (Unexpected behavior)"
+    fi
+}
+
+echo " "
+echo "Multi-disabler for Samsung devices"
+echo "running ReadOnly EROFS Vendor Images."
+echo " "
+
+os=$(getprop ro.build.version.release)
+major=${os%%.*}
+bl=$(getprop ro.boot.bootloader)
+dp=$(getprop ro.boot.dynamic_partitions)
+
+# Firmware version starts at either 8th or 9th character, depending on length
+# of bootloader string (12 or 13).
+#
+fw=${bl:$((${#bl} - 4)):4}
+
+# Device is first 5 characters of bootloader string.
+#
+device=${bl:0:$((${#bl} - 8))}
+mft=$(getprop ro.product.manufacturer | tr '[A-Z]' '[a-z]')
+
+if [ "$mft" != samsung ]; then
+  echo " - Device appears not to be made by Samsung."
+  fatal=true
+elif [ -z "$device" ]; then
+  echo " - Could not determine device model."
+  fatal=true
+elif [ $major -lt 9 ]; then
+  echo " - This software is incompatible with Android $major."
+  fatal=true
+fi
+if [ -n "$fatal" ]; then
+  echo " - Installation aborted."
+  echo " "
+  exit 1
+fi
+
+echo " - Detected a $device device with a $fw bootloader."
+echo " - The environment appears to be Android $major."
+echo " "
+
+echo " - Mounting /vendor..."
+mount -o ro /vendor &>/dev/null
+if ! mount | grep -q /vendor; then
+  echo " -   Mount failed. Aborting..."
+  exit 1
+fi
+
+dm_block=$(df -t erofs | grep "/vendor" | cut -DF1)
+if [ "$dm_block" == "" ]; then
+    echo " - ERROR: Could not determine vendor block..."
+    exit 1
+fi
+echo " - Detected vendor at ${dm_block}"
+
+umount /vendor &>/dev/null
+if mount | grep -q /vendor; then
+  echo " -   Unmount failed. Aborting..."
+  exit 1
+fi
+
+# /tmp has only half ram, so we mount another tmpfs
+if mount | grep -q ${ram}; then
+    umount ${ram} &>/dev/null
+fi
+mkdir -p ${ram}
+mount -t tmpfs -o size=$(free -b | awk 'NR==2{print $2}') none ${ram}
+if ! mount | grep -q ${ram}; then
+    echo " - Couldn't mount RAMFS for storing vendor..."
+    exit 1
+fi
+
+echo " - Copying vendor to RAM..."
+dd if=$dm_block of=$vendor_image bs=2097152
+if [ "$?" != "0" ]; then
+    echo "-    Failed..."
+    exit 1
+fi
+echo "-    Done..."
+
+shrink "$vendor_image"
+
+disable_encryption
+disable_recovery_restoration
+fsck
+
+echo " - Flashing vendor..."
+dd if=$vendor_image of=$dm_block bs=2097152
+echo " - Cleaning..."
+rm -f $vendor_image
+umount ${ram} &>/dev/null
+
+echo " "
+echo " - Finished."
+echo " "

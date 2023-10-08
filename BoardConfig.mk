@@ -129,6 +129,7 @@ DISABLE_ARTIFACT_PATH_REQUIREMENTS := true
 # TWRP specific build flags
 TW_DEVICE_VERSION := Samsung Galaxy A14 5G (Exynos)
 TW_INCLUDE_REPACKTOOLS := true
+TW_INCLUDE_LIBRESETPROP := true
 TW_INCLUDE_RESETPROP := true
 TW_NO_SCREEN_BLANK := true
 TW_THEME := portrait_hdpi

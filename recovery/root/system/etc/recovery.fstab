@@ -41,8 +41,6 @@ odm	/odm	erofs	ro	avb,logical,first_stage_mount
 /dev/block/mmcblk0p1                                 /sdcard         sdfat       defaults                  recoveryonly
 /dev/block/by-name/sec_efs     /efs            ext4        defaults                  recoveryonly
 /dev/block/by-name/sec_efs     /sec_efs        ext4        defaults                  recoveryonly
-/dev/block/by-name/carrier     /carrier        ext4        defaults                  recoveryonly
-/dev/block/by-name/hidden      /preload        ext4        defaults                  recoveryonly
 /dev/block/by-name/radio         /modem        emmc     defaults                  recoveryonly
 
 # Add misc for GOTA

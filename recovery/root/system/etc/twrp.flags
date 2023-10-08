@@ -29,7 +29,6 @@ odm             /odm            erofs                                           
 /recovery	emmc		/dev/block/bootdevice/by-name/recovery		flags=backup=1;flashimg;display="Recovery"
 /data		f2fs		/dev/block/bootdevice/by-name/userdata		flags=length=-20480
 /cache		ext4		/dev/block/bootdevice/by-name/cache		flags=backup=1;display="Cache"
-/persist	ext4		/dev/block/bootdevice/by-name/persist		flags=fsflags=ro;display="Persist"
 /efs		ext4		/dev/block/bootdevice/by-name/efs		flags=backup=1;display="EFS"
 /sec_efs	ext4		/dev/block/bootdevice/by-name/sec_efs		flags=backup=1;display="Sec EFS"
 /modem		emmc		/dev/block/bootdevice/by-name/radio		flags=backup=1;display="Modem"

@@ -34,7 +34,7 @@ odm             /odm            erofs                                           
 /modem		emmc		/dev/block/bootdevice/by-name/radio		flags=backup=1;display="Modem"
 /dtbo		emmc		/dev/block/bootdevice/by-name/dtbo		flags=backup=1;flashimg;display="Dtbo"
 /cp_debug	emmc		/dev/block/bootdevice/by-name/cp_debug		flags=backup=1;display="CP Debug"
-/param		emmc		/dev/block/bootdevice/by-name/param		flags=backup=1;display="Param"
+/up_param	emmc		/dev/block/bootdevice/by-name/up_param		flags=backup=1;display="Param"
 /optics_image	emmc		/dev/block/bootdevice/by-name/optics		flags=backup=1;flashimg;display="Optics Image"
 /prism_image	emmc		/dev/block/bootdevice/by-name/prism		flags=backup=1;flashimg;display="Prism Image"
 /vbmeta_system	emmc		/dev/block/bootdevice/by-name/vbmeta_system

@@ -38,6 +38,7 @@ odm             /odm            erofs                                           
 /optics_image	emmc		/dev/block/bootdevice/by-name/optics		flags=backup=1;flashimg;display="Optics Image"
 /prism_image	emmc		/dev/block/bootdevice/by-name/prism		flags=backup=1;flashimg;display="Prism Image"
 /vbmeta_system	emmc		/dev/block/bootdevice/by-name/vbmeta_system
+/init_boot	emmc            /dev/block/bootdevice/by-name/init_boot		flags=backup=1;flashimg;display="Init Boot"
 /vendor_boot	emmc		/dev/block/bootdevice/by-name/vendor_boot	flags=backup=1;flashimg;display="Vendor Boot"
 /vbmeta_samsung	emmc		/dev/block/bootdevice/by-name/vbmeta_samsung
 
